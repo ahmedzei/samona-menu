@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>תפריט דיגיטלי</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+      background: #fff;
+      color: #222;
+    }
+    .category {
+      margin-top: 25px;
+    }
+    .category h2 {
+      border-bottom: 2px solid #444;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+    .item {
+      margin-bottom: 8px;
+    }
+    .item .name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .item .description {
+      font-size: 14px;
+      color: #555;
+    }
+    .price {
+      font-size: 16px;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="menu"></div>
+
+<!-- Papa Parse for CSV parsing -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+  const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTKosa_uR5CFcW4e335cn8KG-1WjoWGDlFiATxRs0kX9SuSU5sUHiUgwJ4KmPnVaMGmHhDYuR3nAbPA/pub?gid=809200224&single=true&output=csv";
+
+  Papa.parse(csvUrl, {
+    download: true,
+    header: true,
+    complete: function(results) {
+      const rows = results.data;
+      const menuDiv = document.getElementById("menu");
+
+      // group by category
+      const grouped = {};
+      rows.forEach(row => {
+        if (!row.available || row.available.toLowerCase() !== "true") return;
+        const cat = row.category.trim();
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(row);
+      });
+
+      // render
+      for (const cat of Object.keys(grouped)) {
+        const section = document.createElement("div");
+        section.className = "category";
+        section.innerHTML = `<h2>${cat}</h2>`;
+        grouped[cat].forEach(item => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "item";
+          itemDiv.innerHTML = `
+            <div class="name">${item.name}</div>
+            <div class="description">${item.description || ""}</div>
+            <div class="price">${item.price_small || ""}${item.price_large ? " / " + item.price_large : ""} ₪</div>
+          `;
+          section.appendChild(itemDiv);
+        });
+        menuDiv.appendChild(section);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
