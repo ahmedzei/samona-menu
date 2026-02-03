@@ -24,16 +24,19 @@
       padding-bottom: 2rem;
       position: relative;
     }
-    /* Subtle background from view photos */
+    /* Background from view photo – visible but soft */
     body::before {
       content: '';
       position: fixed;
-      inset: 0;
-      max-width: 600px;
+      top: 0;
       left: 50%;
       transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      min-height: 100vh;
+      height: 100%;
       background: url('pics/view.JPG') center center / cover no-repeat;
-      opacity: 0.08;
+      opacity: 0.18;
       z-index: 0;
       pointer-events: none;
     }
@@ -371,6 +374,7 @@
             itemDiv.className = "item";
 
             const photoSrc = getItemPhoto(item);
+            /* Use path as-is: do not encodeURI() – server has Hebrew filenames (e.g. ביאנקה.jpeg) */
             const photoHtml = photoSrc
               ? `<div class="item-photo"><img src="${photoSrc}" alt="" loading="lazy" /></div>`
               : '<div class="item-photo no-photo">אין תמונה</div>';
