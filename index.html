@@ -12,6 +12,8 @@
     html {
       overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
+      min-height: 100%;
+      min-height: 100vh;
     }
     body {
       font-family: 'Assistant', sans-serif;
@@ -19,33 +21,23 @@
       padding: 0;
       max-width: 600px;
       min-height: 100vh;
+      min-height: 100dvh;
       color: #222;
       line-height: 1.5;
       padding-bottom: 2rem;
       position: relative;
-    }
-    /* Background from view photo – visible but soft */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 600px;
-      min-height: 100vh;
-      height: 100%;
-      background: url('pics/view.JPG') center center / cover no-repeat;
-      opacity: 0.18;
-      z-index: 0;
-      pointer-events: none;
+      /* Background on body so it works on mobile (fixed ::before often doesn’t paint there) */
+      background-image: linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)), url('pics/view.JPG');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
     }
     .menu-header,
     .category-nav,
     .menu-content,
     .menu-footer {
       position: relative;
-      z-index: 1;
     }
 
     /* ─── Header with logo ─── */
