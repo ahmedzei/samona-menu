@@ -277,21 +277,19 @@
       פרווה: '🥬'
     };
 
-    /* Map CSV item name to image path. Order: more specific names first (match uses first hit). */
+    /* Map item name – must match CSV "name" column exactly. Order: more specific first. */
     const PHOTO_MAP = {
       'פוקצ׳ה טרייה': 'pics/פוקצה.jpeg',
       'ארוחת בוקר סאמונה': 'pics/ארוחת בוקר.jpeg',
       'טוסט טאבון': 'pics/טוסט.jpeg',
-      'מרגריטה ילדים': 'pics/מרגריטה.jpeg',
       'סאמונה שניצל': 'pics/שניצל.jpeg',
+      'מרגריטה ילדים': 'pics/מרגריטה.jpeg',
       'טאבולה טאבון': 'pics/טאבולה.jpeg',
       'סלט פטוש': 'pics/פטוש.jpeg',
       'סלט שרי פסטו': 'pics/סלט שירי פסטו.jpeg',
       'מרגריטה': 'pics/מרגריטה.jpeg',
       'שרי פסטו': 'pics/שירי פסטו.jfif',
       'ביאנקה פטריות': 'pics/ביאנקה.jpeg',
-      'ביאנקה': 'pics/ביאנקה.jpeg',
-      'מרגריטה': 'pics/מרגריטה.jpeg',
       'פפרוני': 'pics/פפרוני.jpg',
       'זעתר': 'pics/זעתר.jpeg',
       'אבוקדו': 'pics/אבוקאדו.jpeg',
@@ -301,7 +299,16 @@
       'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg',
       'כנאפה': 'pics/קנאפה.jpeg',
       'אספרסו': 'pics/אספרסו.jpg',
-      'הפוך': 'pics/הפוך.jpeg'
+      'אמריקאנו חם': 'pics/אמריקאנו חם.png',
+      'קורטדו': 'pics/קורטדו.png',
+      'הפוך': 'pics/הפוך.jpeg',
+      'שוקו חם': 'pics/שוקו חם.png',
+      'קפה ערבי': 'pics/קפה ערבי.png',
+      'אמריקאנו קר': 'pics/אמריקאנו קר.png',
+      'לימונדה': 'pics/לימונדה.png',
+      'קפה קר': 'pics/קפה קר.png',
+      'סחוט טרי': 'pics/סחוט טרי תפוזים.png',
+      'תפוזים': 'pics/סחוט טרי תפוזים.png'
     };
 
     function getItemPhoto(item) {
