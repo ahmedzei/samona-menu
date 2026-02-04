@@ -340,13 +340,21 @@
       download: true,
       header: true,
       complete: function(results) {
-        const rows = results.data;
         const menuDiv = document.getElementById("menu");
         const navEl = document.getElementById("categoryNav");
+        const rows = results.data || [];
+        if (!rows.length) {
+          menuDiv.innerHTML = '<p style="padding:1rem;text-align:center;color:#666;">לא ניתן לטעון את התפריט. בדוק חיבור לאינטרנט או נסה שוב מאוחר יותר.</p>';
+          return;
+        }
 
         const grouped = {};
+        const isAvailable = (v) => {
+          const s = String(v || '').trim().toLowerCase();
+          return s === 'true' || s === '1' || s === 'yes';
+        };
         rows.forEach(row => {
-          if (!row.available || String(row.available).toLowerCase() !== "true") return;
+          if (!isAvailable(row.available)) return;
           const cat = (row.category || '').trim();
           if (!cat) return;
           if (!grouped[cat]) grouped[cat] = [];
