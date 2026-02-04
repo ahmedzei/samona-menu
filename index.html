@@ -277,14 +277,17 @@
       פרווה: '🥬'
     };
 
-    /* Map item name (normalized) or CSV "photo" column to image path. Add more as you upload. */
+    /* Map CSV item name to image path. Order: more specific names first (match uses first hit). */
     const PHOTO_MAP = {
       'פוקצ׳ה טרייה': 'pics/פוקצה.jpeg',
       'ארוחת בוקר סאמונה': 'pics/ארוחת בוקר.jpeg',
       'טוסט טאבון': 'pics/טוסט.jpeg',
+      'מרגריטה ילדים': 'pics/מרגריטה.jpeg',
+      'סאמונה שניצל': 'pics/שניצל.jpeg',
       'טאבולה טאבון': 'pics/טאבולה.jpeg',
       'סלט פטוש': 'pics/פטוש.jpeg',
       'סלט שרי פסטו': 'pics/סלט שירי פסטו.jpeg',
+      'מרגריטה': 'pics/מרגריטה.jpeg',
       'שרי פסטו': 'pics/שירי פסטו.jfif',
       'ביאנקה פטריות': 'pics/ביאנקה.jpeg',
       'ביאנקה': 'pics/ביאנקה.jpeg',
@@ -292,12 +295,11 @@
       'פפרוני': 'pics/פפרוני.jpg',
       'זעתר': 'pics/זעתר.jpeg',
       'אבוקדו': 'pics/אבוקאדו.jpeg',
-      'עוף מתובל': 'pics/עוף.jpeg',
       'שניצל': 'pics/שניצל.jpeg',
+      'עוף מתובל': 'pics/עוף.jpeg',
       'חביתה': 'pics/חביתה.jpeg',
       'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg',
       'כנאפה': 'pics/קנאפה.jpeg',
-      'קנאפה': 'pics/קנאפה.jpeg',
       'אספרסו': 'pics/אספרסו.jpg',
       'הפוך': 'pics/הפוך.jpeg'
     };
@@ -349,6 +351,14 @@
           if (!cat) return;
           if (!grouped[cat]) grouped[cat] = [];
           grouped[cat].push(row);
+        });
+
+        const sortNum = (row) => {
+          const n = parseInt(row.sort, 10);
+          return Number.isNaN(n) ? 9999 : n;
+        };
+        Object.keys(grouped).forEach(cat => {
+          grouped[cat].sort((a, b) => sortNum(a) - sortNum(b));
         });
 
         const categories = Object.keys(grouped);
