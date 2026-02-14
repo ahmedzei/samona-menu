@@ -343,6 +343,23 @@
       return { num, size };
     }
 
+    /* Default size labels per category when sheet has no size_small/size_large columns. */
+    function getSizeLabels(category, item) {
+      const fromSheet = (item.size_small || item.price_small_label || '').trim();
+      const fromSheetLarge = (item.size_large || item.price_large_label || '').trim();
+      if (fromSheet || fromSheetLarge) {
+        return {
+          small: fromSheet || 'אישי',
+          large: fromSheetLarge || 'משפחתית'
+        };
+      }
+      const cat = (category || '').trim();
+      if (cat === 'בוקר') return { small: 'אישי', large: 'זוגי' };
+      if (cat === 'פיצות') return { small: 'רגילה', large: 'ענקית' };
+      if (cat === 'שתייה חמה' || cat === 'שתייה קרה') return { small: 'רגיל', large: 'גדול' };
+      return { small: 'אישי', large: 'משפחתית' };
+    }
+
     Papa.parse(csvUrl, {
       download: true,
       header: true,
@@ -416,10 +433,9 @@
               : '';
 
             const prices = [];
-            const smallLabel = (item.size_small || item.price_small_label || 'אישי').trim();
-            const largeLabel = (item.size_large || item.price_large_label || 'משפחתית').trim();
-            const pSmall = formatPrice(item.price_small, item.price_large ? smallLabel : null);
-            const pLarge = formatPrice(item.price_large, item.price_large ? largeLabel : null);
+            const sizeLabels = getSizeLabels(cat, item);
+            const pSmall = formatPrice(item.price_small, item.price_large ? sizeLabels.small : null);
+            const pLarge = formatPrice(item.price_large, item.price_large ? sizeLabels.large : null);
             if (pSmall) prices.push(`<span class="price-row"><span class="currency">${pSmall.num} ₪</span>${pSmall.size ? `<span class="size">${pSmall.size}</span>` : ''}</span>`);
             if (pLarge) prices.push(`<span class="price-row"><span class="currency">${pLarge.num} ₪</span>${pLarge.size ? `<span class="size">${pLarge.size}</span>` : ''}</span>`);
 
