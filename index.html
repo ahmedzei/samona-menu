@@ -6,41 +6,25 @@
   <title>תפריט סאמונה</title>
   <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    html {
-      overflow-x: hidden;
-      -webkit-text-size-adjust: 100%;
-      min-height: 100%;
-      min-height: 100vh;
-    }
+    * { box-sizing: border-box; }
+    html { overflow-x: hidden; -webkit-text-size-adjust: 100%; min-height: 100vh; }
     body {
       font-family: 'Assistant', sans-serif;
       margin: 0 auto;
       padding: 0;
       max-width: 600px;
       min-height: 100vh;
-      min-height: 100dvh;
       color: #222;
       line-height: 1.5;
-      padding-bottom: 2rem;
       position: relative;
-      /* Background on body so it works on mobile (fixed ::before often doesn’t paint there) */
       background-image: linear-gradient(rgba(250,249,247,0.25), rgba(250,249,247,0.25)), url('pics/view_compressed.JPG');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: scroll;
     }
-    .menu-header,
-    .category-nav,
-    .menu-content,
-    .menu-footer {
-      position: relative;
-    }
 
-    /* ─── Header with logo ─── */
+    /* ─── Header ─── */
     .menu-header {
       text-align: center;
       padding: 1rem 1rem 0.75rem;
@@ -54,199 +38,249 @@
       width: auto;
       object-fit: contain;
     }
-    .menu-header h1 {
-      margin: 0;
-      font-size: 1.65rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .menu-header h1 { margin: 0; font-size: 1.65rem; font-weight: 700; }
+    .menu-header .tagline { margin: 0.25rem 0 0; font-size: 0.95rem; color: #666; }
+
+    /* ─── Home view ─── */
+    .view-home { display: block; padding-bottom: 2rem; }
+    .view-home.hidden { display: none !important; }
+
+    .hero {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: rgba(0,0,0,0.04);
+      margin: 0 1rem 1rem;
+      border-radius: 12px;
     }
-    .menu-header .tagline {
-      margin: 0.25rem 0 0;
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: #666;
+    .hero .tagline-hero {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #333;
+      margin: 0;
     }
 
-    /* ─── Sticky category jump ─── */
-    .category-nav {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(250,249,247,0.85);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid #e0e0e0;
-      padding: 0.5rem 0.75rem;
+    /* Horizontal category strip */
+    .category-strip {
       display: flex;
-      flex-wrap: wrap;
+      overflow-x: auto;
       gap: 0.5rem;
-      justify-content: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      padding: 0.75rem 1rem;
+      margin: 0 0 0.5rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    .category-nav button {
+    .category-strip::-webkit-scrollbar { display: none; }
+    .cat-pill {
+      flex-shrink: 0;
       font-family: 'Assistant', sans-serif;
       font-size: 0.95rem;
       font-weight: 600;
       padding: 0.6rem 1rem;
-      min-height: 44px;
-      min-width: 44px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: rgba(250,249,247,0.9);
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      background: rgba(250,249,247,0.95);
       color: #333;
       cursor: pointer;
       white-space: nowrap;
       transition: background 0.2s, border-color 0.2s;
     }
-    .category-nav button:hover,
-    .category-nav button:focus {
-      background: #f5f5f5;
-      border-color: #bbb;
-      outline: none;
-    }
+    .cat-pill:hover, .cat-pill:focus { background: #eee; border-color: #999; outline: none; }
+    .cat-pill.active { background: #333; color: #fff; border-color: #333; }
 
-    /* ─── Main content ─── */
-    .menu-content {
-      padding: 1rem;
-      background: rgba(250,249,247,0.4);
-      margin: 0 0 1rem;
-    }
-
-    /* ─── Category sections ─── */
-    .category {
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(0,0,0,0.08);
-    }
-    .category:first-of-type {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
-    }
-    .category h2 {
-      font-size: 1.25rem;
+    .current-category-title {
+      font-size: 1.35rem;
       font-weight: 700;
-      margin: 0 0 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #333;
+      margin: 0 1rem 0.5rem;
       color: #111;
     }
 
-    /* ─── Item: stacked layout – image on top, text centered below ─── */
-    .item {
+    /* Horizontal item row */
+    .item-row {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      padding: 0;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      background: rgba(250,249,247,0.5);
-      border-radius: 16px;
+      overflow-x: auto;
+      gap: 1rem;
+      padding: 0 1rem 1rem;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .item-row::-webkit-scrollbar { display: none; }
+
+    .item-card {
+      flex-shrink: 0;
+      width: 165px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      background: rgba(250,249,247,0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    .item:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-    }
-    .item-photo {
+    .item-card:active { transform: scale(0.98); }
+    .item-card .card-photo {
       width: 100%;
-      max-width: 100%;
-      height: 220px;
-      border-radius: 0;
-      overflow: hidden;
+      height: 140px;
       background: #e8e8e8;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      overflow: hidden;
     }
-    .item-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .item-photo.no-photo {
-      color: #999;
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 1rem;
-      line-height: 1.4;
-    }
-    .item-body {
-      width: 100%;
-      padding: 1rem 1rem 1.25rem;
-      box-sizing: border-box;
-    }
-    .item .name {
+    .item-card .card-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .item-card .card-photo.no-photo { color: #999; font-size: 0.75rem; padding: 0.5rem; text-align: center; }
+    .item-card .card-name {
       font-weight: 700;
-      font-size: 1.25rem;
-      color: #111;
-      margin-bottom: 0.35rem;
-    }
-    .item .description {
-      font-size: 0.9375rem;
-      font-weight: 400;
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 0.5rem;
-    }
-    .item .tags {
-      font-size: 0.875rem;
-      color: #666;
-      margin-bottom: 0.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0 0.5rem;
-    }
-    .item .tags span {
-      margin-left: 0;
-    }
-    .item .prices {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: center;
-      gap: 0.75rem 1rem;
-      margin-top: 0.35rem;
-    }
-    .item .price-row {
       font-size: 1rem;
+      padding: 0.5rem 0.6rem 0.25rem;
+      color: #111;
+      line-height: 1.3;
+    }
+    .item-card .card-price {
+      padding: 0 0.6rem 0.6rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #111;
     }
-    .item .price-row .currency {
-      font-weight: 700;
-      margin-right: 0.15em;
+    .item-card .card-price .price-pill {
+      display: inline-block;
+      background: #c33;
+      color: #fff;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
     }
-    .item .price-row .size {
-      font-weight: 400;
-      font-size: 0.9em;
-      color: #666;
+
+    .btn-show-all {
+      display: block;
+      margin: 0 1rem 1.5rem;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Assistant', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      background: #c33;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
+    .btn-show-all:hover, .btn-show-all:focus { background: #a22; outline: none; }
+
+    /* ─── Category page (full list) ─── */
+    .view-category {
+      display: none;
+      padding-bottom: 2rem;
+    }
+    .view-category.visible { display: block; }
+
+    .category-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(250,249,247,0.95);
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .btn-back {
+      flex-shrink: 0;
+      font-family: 'Assistant', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-back:hover, .btn-back:focus { background: #111; outline: none; }
+    .category-page-title { margin: 0; font-size: 1.25rem; font-weight: 700; color: #111; }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .category-grid .item-card {
+      width: 100%;
+      max-width: 100%;
+    }
+    .category-grid .item-card .card-photo { height: 120px; }
+
+    /* ─── Item modal (popup) ─── */
+    #item-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    #item-modal.open { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(0,0,0,0.1);
+      border-radius: 50%;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.2); }
+    .modal-item-photo {
+      width: 100%;
+      height: 220px;
+      background: #e8e8e8;
+      object-fit: cover;
+    }
+    .modal-item-photo-placeholder {
+      width: 100%;
+      height: 120px;
+      background: #e8e8e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    .modal-item-body { padding: 1.25rem 1rem; text-align: center; }
+    .modal-item-body .name { font-size: 1.35rem; font-weight: 700; color: #111; margin-bottom: 0.5rem; }
+    .modal-item-body .prices { margin-bottom: 0.75rem; }
+    .modal-item-body .description { font-size: 0.95rem; color: #555; line-height: 1.5; text-align: right; }
+    .modal-item-body .tags { font-size: 0.875rem; color: #666; margin-top: 0.5rem; }
 
     /* ─── Footer ─── */
     .menu-footer {
       text-align: center;
       padding: 2rem 1rem 1rem;
-      margin-top: 0.5rem;
       border-top: 1px solid rgba(0,0,0,0.08);
       font-size: 0.9rem;
       color: #666;
       line-height: 1.6;
       background: rgba(250, 249, 247, 0.7);
     }
-    .menu-footer p {
-      margin: 0.35rem 0;
-    }
-    .menu-footer a {
-      color: #444;
-      text-decoration: none;
-    }
-    .menu-footer a:hover {
-      text-decoration: underline;
-    }
+    .menu-footer p { margin: 0.35rem 0; }
+    .menu-footer a { color: #444; text-decoration: none; }
+    .menu-footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -257,11 +291,36 @@
     <p class="tagline">מהטאבון באהבה</p>
   </header>
 
-  <nav class="category-nav" id="categoryNav" aria-label="ניווט קטגוריות"></nav>
+  <div class="view-home" id="viewHome">
+    <div class="hero">
+      <p class="tagline-hero">מהטאבון באהבה</p>
+    </div>
+    <div class="category-strip" id="categoryStrip"></div>
+    <h2 class="current-category-title" id="currentCategoryTitle"></h2>
+    <div class="item-row" id="itemRow"></div>
+    <button type="button" class="btn-show-all" id="btnShowAll">הצג הכל</button>
+  </div>
 
-  <main class="menu-content">
-    <div id="menu"></div>
-  </main>
+  <div class="view-category" id="viewCategory">
+    <div class="category-toolbar">
+      <button type="button" class="btn-back" id="btnBack">חזור</button>
+      <h2 class="category-page-title" id="categoryPageTitle"></h2>
+    </div>
+    <div class="category-grid" id="categoryGrid"></div>
+  </div>
+
+  <div id="item-modal" aria-hidden="true">
+    <div class="modal-content">
+      <button type="button" class="modal-close" id="modalClose" aria-label="סגור">×</button>
+      <div id="modalPhoto"></div>
+      <div class="modal-item-body">
+        <div class="name" id="modalName"></div>
+        <div class="prices" id="modalPrices"></div>
+        <div class="description" id="modalDescription"></div>
+        <div class="tags" id="modalTags"></div>
+      </div>
+    </div>
+  </div>
 
   <footer class="menu-footer">
     <p>כל המנות מוכנות במקום</p>
@@ -273,90 +332,44 @@
   <script>
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTKosa_uR5CFcW4e335cn8KG-1WjoWGDlFiATxRs0kX9SuSU5sUHiUgwJ4KmPnVaMGmHhDYuR3nAbPA/pub?gid=809200224&single=true&output=csv";
 
-    const TAG_ICONS = {
-      טבעוני: '🌱',
-      חלבי: '🧀',
-      חריף: '🌶',
-      בשרי: '🥩',
-      פרווה: '🥬'
-    };
-
-    /* Map item name – must match CSV "name" column exactly. Order: more specific first. */
+    const TAG_ICONS = { טבעוני: '🌱', חלבי: '🧀', חריף: '🌶', בשרי: '🥩', פרווה: '🥬' };
     const PHOTO_MAP = {
-      'פוקצ׳ה טרייה': 'pics/פוקצה.jpeg',
-      'ארוחת בוקר סאמונה': 'pics/ארוחת בוקר.jpeg',
-      'טוסט טאבון': 'pics/טוסט.jpeg',
-      'סאמונה שניצל': 'pics/שניצל.jpeg',
-      'מרגריטה ילדים': 'pics/מרגריטה.jpeg',
-      'טאבולה טאבון': 'pics/טאבולה.jpeg',
-      'סלט פטוש': 'pics/פטוש.jpeg',
-      'סלט שרי פסטו': 'pics/סלט שירי פסטו.jpeg',
-      'מרגריטה': 'pics/מרגריטה.jpeg',
-      'שרי פסטו': 'pics/שירי פסטו.jfif',
-      'ביאנקה פטריות': 'pics/ביאנקה.jpeg',
-      'פפרוני': 'pics/פפרוני.jpg',
-      'זעתר': 'pics/זעתר.jpeg',
-      'אבוקדו': 'pics/אבוקאדו.jpeg',
-      'שניצל': 'pics/שניצל.jpeg',
-      'עוף מתובל': 'pics/עוף.jpeg',
-      'חביתה': 'pics/חביתה.jpeg',
-      'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg',
-      'כנאפה': 'pics/קנאפה.jpeg',
-      'אספרסו': 'pics/אספרסו.jpg',
-      'אמריקאנו חם': 'pics/אמריקאנו חם.png',
-      'קורטדו': 'pics/קורטדו.png',
-      'הפוך': 'pics/הפוך.jpeg',
-      'שוקו חם': 'pics/שוקו חם.png',
-      'קפה ערבי': 'pics/קפה ערבי.png',
-      'אמריקאנו קר': 'pics/אמריקאנו קר.png',
-      'לימונדה': 'pics/לימונדה.png',
-      'קפה קר': 'pics/קפה קר.png',
-      'סחוט טרי': 'pics/סחוט טרי תפוזים.png',
-      'תפוזים': 'pics/סחוט טרי תפוזים.png'
+      'פוקצ׳ה טרייה': 'pics/פוקצה.jpeg', 'ארוחת בוקר סאמונה': 'pics/ארוחת בוקר.jpeg', 'טוסט טאבון': 'pics/טוסט.jpeg',
+      'סאמונה שניצל': 'pics/שניצל.jpeg', 'מרגריטה ילדים': 'pics/מרגריטה.jpeg', 'טאבולה טאבון': 'pics/טאבולה.jpeg',
+      'סלט פטוש': 'pics/פטוש.jpeg', 'סלט שרי פסטו': 'pics/סלט שירי פסטו.jpeg', 'מרגריטה': 'pics/מרגריטה.jpeg',
+      'שרי פסטו': 'pics/שירי פסטו.jfif', 'ביאנקה פטריות': 'pics/ביאנקה.jpeg', 'פפרוני': 'pics/פפרוני.jpg',
+      'זעתר': 'pics/זעתר.jpeg', 'אבוקדו': 'pics/אבוקאדו.jpeg', 'שניצל': 'pics/שניצל.jpeg', 'עוף מתובל': 'pics/עוף.jpeg',
+      'חביתה': 'pics/חביתה.jpeg', 'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg', 'כנאפה': 'pics/קנאפה.jpeg',
+      'אספרסו': 'pics/אספרסו.jpg', 'אמריקאנו חם': 'pics/אמריקאנו חם.png', 'קורטדו': 'pics/קורטדו.png', 'הפוך': 'pics/הפוך.jpeg',
+      'שוקו חם': 'pics/שוקו חם.png', 'קפה ערבי': 'pics/קפה ערבי.png', 'אמריקאנו קר': 'pics/אמריקאנו קר.png',
+      'לימונדה': 'pics/לימונדה.png', 'קפה קר': 'pics/קפה קר.png', 'סחוט טרי': 'pics/סחוט טרי תפוזים.png', 'תפוזים': 'pics/סחוט טרי תפוזים.png'
     };
 
     function getItemPhoto(item) {
       const photoCol = (item.photo || item.image || '').trim();
-      if (photoCol) {
-        const path = photoCol.startsWith('pics/') ? photoCol : 'pics/' + photoCol;
-        return path;
-      }
+      if (photoCol) return photoCol.startsWith('pics/') ? photoCol : 'pics/' + photoCol;
       const name = (item.name || '').trim();
-      for (const [key, path] of Object.entries(PHOTO_MAP)) {
+      for (const [key, path] of Object.entries(PHOTO_MAP))
         if (name.indexOf(key) !== -1) return path;
-      }
       return null;
     }
-
     function getTagLabel(tag) {
       const t = (tag || '').trim();
-      if (!t) return '';
-      const icon = TAG_ICONS[t] || '';
-      return icon ? `${icon} ${t}` : t;
+      return t && TAG_ICONS[t] ? TAG_ICONS[t] + ' ' + t : t || '';
     }
-
     function parseTags(tagsStr) {
       if (!tagsStr || !String(tagsStr).trim()) return [];
       return String(tagsStr).split(/[,،]/).map(s => s.trim()).filter(Boolean);
     }
-
     function formatPrice(amount, sizeLabel) {
       if (!amount || amount === '' || amount === '-') return null;
       const num = String(amount).trim();
-      const size = sizeLabel ? ` · ${sizeLabel}` : '';
-      return { num, size };
+      return { num, size: sizeLabel ? ' · ' + sizeLabel : '' };
     }
-
-    /* Default size labels per category when sheet has no size_small/size_large columns. */
     function getSizeLabels(category, item) {
       const fromSheet = (item.size_small || item.price_small_label || '').trim();
       const fromSheetLarge = (item.size_large || item.price_large_label || '').trim();
-      if (fromSheet || fromSheetLarge) {
-        return {
-          small: fromSheet || 'אישי',
-          large: fromSheetLarge || 'משפחתית'
-        };
-      }
+      if (fromSheet || fromSheetLarge) return { small: fromSheet || 'אישי', large: fromSheetLarge || 'משפחתית' };
       const cat = (category || '').trim();
       if (cat === 'בוקר') return { small: 'אישי', large: 'זוגי' };
       if (cat === 'פיצות') return { small: 'רגילה', large: 'ענקית' };
@@ -364,23 +377,128 @@
       return { small: 'אישי', large: 'משפחתית' };
     }
 
+    function buildPriceText(category, item) {
+      const labels = getSizeLabels(category, item);
+      const pSmall = formatPrice(item.price_small, item.price_large ? labels.small : null);
+      const pLarge = formatPrice(item.price_large, item.price_large ? labels.large : null);
+      const parts = [];
+      if (pSmall) parts.push(pSmall.num + ' ₪' + pSmall.size);
+      if (pLarge) parts.push(pLarge.num + ' ₪' + pLarge.size);
+      return parts.join('  ');
+    }
+
+    function buildPricePill(category, item) {
+      const labels = getSizeLabels(category, item);
+      const pSmall = formatPrice(item.price_small, item.price_large ? labels.small : null);
+      const pLarge = formatPrice(item.price_large, item.price_large ? labels.large : null);
+      const parts = [];
+      if (pSmall) parts.push(pSmall.num + ' ₪' + pSmall.size);
+      if (pLarge) parts.push(pLarge.num + ' ₪' + pLarge.size);
+      return parts.join('  ');
+    }
+
+    let menuData = { grouped: {}, categories: [] };
+    let selectedCategoryIndex = 0;
+
+    function renderItemCard(item, category, container, isGrid) {
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      const photoSrc = getItemPhoto(item);
+      const photoHtml = photoSrc
+        ? `<div class="card-photo"><img src="${photoSrc}" alt="" loading="lazy" /></div>`
+        : '<div class="card-photo no-photo">אין תמונה</div>';
+      const pricePill = buildPricePill(category, item);
+      const name = (item.name || '').trim();
+      card.innerHTML = photoHtml + `<div class="card-name">${name}</div><div class="card-price"><span class="price-pill">${pricePill}</span></div>`;
+      card.addEventListener('click', () => openItemModal(item, category));
+      container.appendChild(card);
+    }
+
+    function renderHome(selectedIndex) {
+      const strip = document.getElementById('categoryStrip');
+      const title = document.getElementById('currentCategoryTitle');
+      const row = document.getElementById('itemRow');
+      strip.innerHTML = '';
+      const cats = menuData.categories;
+      const cat = cats[selectedIndex];
+      if (!cat) return;
+      title.textContent = cat;
+      cats.forEach((c, idx) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'cat-pill' + (idx === selectedIndex ? ' active' : '');
+        pill.textContent = c;
+        pill.addEventListener('click', () => { selectedCategoryIndex = idx; renderHome(idx); });
+        strip.appendChild(pill);
+      });
+      selectedCategoryIndex = selectedIndex;
+      row.innerHTML = '';
+      (menuData.grouped[cat] || []).forEach(item => renderItemCard(item, cat, row, false));
+    }
+
+    function showCategoryPage(categoryIndex) {
+      const cat = menuData.categories[categoryIndex];
+      if (!cat) return;
+      document.getElementById('viewHome').classList.add('hidden');
+      document.getElementById('viewCategory').classList.add('visible');
+      document.getElementById('categoryPageTitle').textContent = cat;
+      const grid = document.getElementById('categoryGrid');
+      grid.innerHTML = '';
+      (menuData.grouped[cat] || []).forEach(item => renderItemCard(item, cat, grid, true));
+    }
+
+    function hideCategoryPage() {
+      document.getElementById('viewCategory').classList.remove('visible');
+      document.getElementById('viewHome').classList.remove('hidden');
+    }
+
+    function openItemModal(item, category) {
+      const name = (item.name || '').trim();
+      const desc = (item.description || '').trim();
+      const tags = parseTags(item.tags).map(getTagLabel).filter(Boolean);
+      const priceText = buildPriceText(category, item);
+      const photoSrc = getItemPhoto(item);
+
+      document.getElementById('modalName').textContent = name;
+      document.getElementById('modalPrices').innerHTML = priceText ? `<span class="price-pill">${priceText}</span>` : '';
+      document.getElementById('modalDescription').textContent = desc;
+      document.getElementById('modalTags').innerHTML = tags.length ? tags.map(t => `<span>${t}</span> `).join('') : '';
+
+      const photoEl = document.getElementById('modalPhoto');
+      if (photoSrc) {
+        photoEl.innerHTML = `<img src="${photoSrc}" alt="" class="modal-item-photo" />`;
+      } else {
+        photoEl.innerHTML = '<div class="modal-item-photo-placeholder">אין תמונה</div>';
+      }
+
+      const modal = document.getElementById('item-modal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeItemModal() {
+      const modal = document.getElementById('item-modal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('btnBack').addEventListener('click', hideCategoryPage);
+    document.getElementById('modalClose').addEventListener('click', closeItemModal);
+    document.getElementById('item-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeItemModal();
+    });
+
     Papa.parse(csvUrl, {
       download: true,
       header: true,
       complete: function(results) {
-        const menuDiv = document.getElementById("menu");
-        const navEl = document.getElementById("categoryNav");
         const rows = results.data || [];
         if (!rows.length) {
-          menuDiv.innerHTML = '<p style="padding:1rem;text-align:center;color:#666;">לא ניתן לטעון את התפריט. בדוק חיבור לאינטרנט או נסה שוב מאוחר יותר.</p>';
+          document.getElementById('viewHome').innerHTML = '<p style="padding:2rem;text-align:center;color:#666;">לא ניתן לטעון את התפריט.</p>';
           return;
         }
-
+        const isAvailable = (v) => { const s = String(v || '').trim().toLowerCase(); return s === 'true' || s === '1' || s === 'yes'; };
         const grouped = {};
-        const isAvailable = (v) => {
-          const s = String(v || '').trim().toLowerCase();
-          return s === 'true' || s === '1' || s === 'yes';
-        };
         rows.forEach(row => {
           if (!isAvailable(row.available)) return;
           const cat = (row.category || '').trim();
@@ -388,77 +506,18 @@
           if (!grouped[cat]) grouped[cat] = [];
           grouped[cat].push(row);
         });
+        const sortNum = (row) => { const n = parseInt(row.sort, 10); return Number.isNaN(n) ? 9999 : n; };
+        Object.keys(grouped).forEach(c => grouped[c].sort((a, b) => sortNum(a) - sortNum(b)));
+        menuData = { grouped, categories: Object.keys(grouped) };
 
-        const sortNum = (row) => {
-          const n = parseInt(row.sort, 10);
-          return Number.isNaN(n) ? 9999 : n;
-        };
-        Object.keys(grouped).forEach(cat => {
-          grouped[cat].sort((a, b) => sortNum(a) - sortNum(b));
-        });
+        const selectedIndex = 0;
+        renderHome(selectedIndex);
 
-        const categories = Object.keys(grouped);
-
-        categories.forEach((cat, idx) => {
-          const safeId = "cat-" + idx;
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.textContent = cat;
-          btn.setAttribute("data-category-id", safeId);
-          btn.addEventListener("click", function() {
-            const id = this.getAttribute("data-category-id");
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-          navEl.appendChild(btn);
-        });
-
-        categories.forEach((cat, idx) => {
-          const safeId = "cat-" + idx;
-          const section = document.createElement("section");
-          section.className = "category";
-          section.id = safeId;
-          section.setAttribute("aria-labelledby", "heading-" + section.id);
-          section.innerHTML = `<h2 id="heading-${section.id}">${cat}</h2>`;
-
-          grouped[cat].forEach(item => {
-            const itemDiv = document.createElement("div");
-            itemDiv.className = "item";
-
-            const photoSrc = getItemPhoto(item);
-            /* Use path as-is: do not encodeURI() – server has Hebrew filenames (e.g. ביאנקה.jpeg) */
-            const photoHtml = photoSrc
-              ? `<div class="item-photo"><img src="${photoSrc}" alt="" loading="lazy" /></div>`
-              : '<div class="item-photo no-photo">אין תמונה</div>';
-
-            const tags = parseTags(item.tags);
-            const tagsHtml = tags.length
-              ? `<div class="tags">${tags.map(t => `<span>${getTagLabel(t)}</span>`).join('')}</div>`
-              : '';
-
-            const prices = [];
-            const sizeLabels = getSizeLabels(cat, item);
-            const pSmall = formatPrice(item.price_small, item.price_large ? sizeLabels.small : null);
-            const pLarge = formatPrice(item.price_large, item.price_large ? sizeLabels.large : null);
-            if (pSmall) prices.push(`<span class="price-row"><span class="currency">${pSmall.num} ₪</span>${pSmall.size ? `<span class="size">${pSmall.size}</span>` : ''}</span>`);
-            if (pLarge) prices.push(`<span class="price-row"><span class="currency">${pLarge.num} ₪</span>${pLarge.size ? `<span class="size">${pLarge.size}</span>` : ''}</span>`);
-
-            itemDiv.innerHTML = `
-              ${photoHtml}
-              <div class="item-body">
-                <div class="name">${(item.name || '').trim()}</div>
-                ${item.description ? `<div class="description">${String(item.description).trim()}</div>` : ''}
-                ${tagsHtml}
-                <div class="prices">${prices.join('')}</div>
-              </div>
-            `;
-            section.appendChild(itemDiv);
-          });
-          menuDiv.appendChild(section);
+        document.getElementById('btnShowAll').addEventListener('click', function() {
+          showCategoryPage(selectedCategoryIndex);
         });
       }
     });
   </script>
-
 </body>
 </html>
