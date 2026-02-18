@@ -87,11 +87,16 @@
     .cat-pill:hover, .cat-pill:focus { background: #eee; border-color: #999; outline: none; }
     .cat-pill.active { background: #333; color: #fff; border-color: #333; }
 
-    .current-category-title {
+    /* One section per category (title + item row + הצג הכל) */
+    .category-section {
+      margin-bottom: 1.5rem;
+    }
+    .category-section-title {
       font-size: 1.35rem;
       font-weight: 700;
       margin: 0 1rem 0.5rem;
       color: #111;
+      scroll-margin-top: 0.5rem;
     }
 
     /* Horizontal item row */
@@ -151,8 +156,8 @@
 
     .btn-show-all {
       display: block;
-      margin: 0 1rem 1.5rem;
-      padding: 0.75rem 1.25rem;
+      margin: 0 1rem 1rem;
+      padding: 0.65rem 1.15rem;
       font-family: 'Assistant', sans-serif;
       font-size: 1rem;
       font-weight: 600;
@@ -296,9 +301,7 @@
       <p class="tagline-hero">מהטאבון באהבה</p>
     </div>
     <div class="category-strip" id="categoryStrip"></div>
-    <h2 class="current-category-title" id="currentCategoryTitle"></h2>
-    <div class="item-row" id="itemRow"></div>
-    <button type="button" class="btn-show-all" id="btnShowAll">הצג הכל</button>
+    <div id="categorySections"></div>
   </div>
 
   <div class="view-category" id="viewCategory">
@@ -398,7 +401,6 @@
     }
 
     let menuData = { grouped: {}, categories: [] };
-    let selectedCategoryIndex = 0;
 
     function renderItemCard(item, category, container, isGrid) {
       const card = document.createElement('div');
@@ -414,26 +416,50 @@
       container.appendChild(card);
     }
 
-    function renderHome(selectedIndex) {
+    function renderAllCategories() {
       const strip = document.getElementById('categoryStrip');
-      const title = document.getElementById('currentCategoryTitle');
-      const row = document.getElementById('itemRow');
+      const container = document.getElementById('categorySections');
       strip.innerHTML = '';
+      container.innerHTML = '';
       const cats = menuData.categories;
-      const cat = cats[selectedIndex];
-      if (!cat) return;
-      title.textContent = cat;
+
       cats.forEach((c, idx) => {
         const pill = document.createElement('button');
         pill.type = 'button';
-        pill.className = 'cat-pill' + (idx === selectedIndex ? ' active' : '');
+        pill.className = 'cat-pill';
         pill.textContent = c;
-        pill.addEventListener('click', () => { selectedCategoryIndex = idx; renderHome(idx); });
+        pill.setAttribute('data-category-index', idx);
+        pill.addEventListener('click', () => {
+          const el = document.getElementById('cat-' + idx);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
         strip.appendChild(pill);
       });
-      selectedCategoryIndex = selectedIndex;
-      row.innerHTML = '';
-      (menuData.grouped[cat] || []).forEach(item => renderItemCard(item, cat, row, false));
+
+      cats.forEach((cat, idx) => {
+        const section = document.createElement('section');
+        section.className = 'category-section';
+        section.id = 'cat-' + idx;
+
+        const title = document.createElement('h2');
+        title.className = 'category-section-title';
+        title.textContent = cat;
+        section.appendChild(title);
+
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        (menuData.grouped[cat] || []).forEach(item => renderItemCard(item, cat, row, false));
+        section.appendChild(row);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-show-all';
+        btn.textContent = 'הצג הכל';
+        btn.addEventListener('click', () => showCategoryPage(idx));
+        section.appendChild(btn);
+
+        container.appendChild(section);
+      });
     }
 
     function showCategoryPage(categoryIndex) {
@@ -509,13 +535,7 @@
         const sortNum = (row) => { const n = parseInt(row.sort, 10); return Number.isNaN(n) ? 9999 : n; };
         Object.keys(grouped).forEach(c => grouped[c].sort((a, b) => sortNum(a) - sortNum(b)));
         menuData = { grouped, categories: Object.keys(grouped) };
-
-        const selectedIndex = 0;
-        renderHome(selectedIndex);
-
-        document.getElementById('btnShowAll').addEventListener('click', function() {
-          showCategoryPage(selectedCategoryIndex);
-        });
+        renderAllCategories();
       }
     });
   </script>
