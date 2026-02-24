@@ -336,25 +336,34 @@
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTKosa_uR5CFcW4e335cn8KG-1WjoWGDlFiATxRs0kX9SuSU5sUHiUgwJ4KmPnVaMGmHhDYuR3nAbPA/pub?gid=809200224&single=true&output=csv";
 
     const TAG_ICONS = { טבעוני: '🌱', חלבי: '🧀', חריף: '🌶', בשרי: '🥩', פרווה: '🥬' };
+    const LOGO_PATH = 'pics/logo.jpg';
+
     const PHOTO_MAP = {
       'פוקצ׳ה טרייה': 'pics/פוקצה.jpeg', 'ארוחת בוקר סאמונה': 'pics/ארוחת בוקר.jpeg', 'טוסט טאבון': 'pics/טוסט.jpeg',
-      'סאמונה שניצל': 'pics/שניצל.jpeg', 'מרגריטה ילדים': 'pics/מרגריטה.jpeg', 'טאבולה טאבון': 'pics/טאבולה.jpeg',
+      'סאמונה שניצל': LOGO_PATH,
+      'שקשוקה': 'pics/שקשוקה.jpeg',
+      'מרגריטה ילדים': 'pics/מרגריטה.jpeg', 'טאבולה טאבון': 'pics/טאבולה.jpeg',
       'סלט פטוש': 'pics/פטוש.jpeg', 'סלט שרי פסטו': 'pics/סלט שירי פסטו.jpeg', 'מרגריטה': 'pics/מרגריטה.jpeg',
       'שרי פסטו': 'pics/שירי פסטו.jfif', 'ביאנקה פטריות': 'pics/ביאנקה.jpeg', 'פפרוני': 'pics/פפרוני.jpg',
-      'זעתר': 'pics/זעתר.jpeg', 'אבוקדו': 'pics/אבוקאדו.jpeg', 'שניצל': 'pics/שניצל.jpeg', 'עוף מתובל': 'pics/עוף.jpeg',
-      'חביתה': 'pics/חביתה.jpeg', 'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg', 'כנאפה': 'pics/קנאפה.jpeg',
+      'זעתר': 'pics/זעתר.jpeg',
+      'כריך אבוקדו': 'pics/אבוקאדו.jpeg', 'כריך אבוקאדו': 'pics/אבוקאדו.jpeg', 'אבוקדו': 'pics/אבוקאדו.jpeg',
+      'כריך שניצל': 'pics/כריך שניצל.jpeg', 'שניצל': 'pics/שניצל.jpeg',
+      'עוף מתובל': 'pics/עוף.jpeg', 'חביתה': 'pics/חביתה.jpeg',
+      'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg',
+      'קנאפה': 'pics/קנאפה חדש.jpeg', 'כנאפה': 'pics/קנאפה חדש.jpeg',
       'אספרסו': 'pics/אספרסו.jpg', 'אמריקאנו חם': 'pics/אמריקאנו חם.png', 'קורטדו': 'pics/קורטדו.png', 'הפוך': 'pics/הפוך.jpeg',
       'שוקו חם': 'pics/שוקו חם.png', 'קפה ערבי': 'pics/קפה ערבי.png', 'אמריקאנו קר': 'pics/אמריקאנו קר.png',
       'לימונדה': 'pics/לימונדה.png', 'קפה קר': 'pics/קפה קר.png', 'סחוט טרי': 'pics/סחוט טרי תפוזים.png', 'תפוזים': 'pics/סחוט טרי תפוזים.png'
     };
 
-    function getItemPhoto(item) {
+    function getItemPhoto(item, category) {
       const photoCol = (item.photo || item.image || '').trim();
       if (photoCol) return photoCol.startsWith('pics/') ? photoCol : 'pics/' + photoCol;
       const name = (item.name || '').trim();
+      if (category === 'כריכים' && name === 'שניצל') return 'pics/כריך שניצל.jpeg';
       for (const [key, path] of Object.entries(PHOTO_MAP))
         if (name.indexOf(key) !== -1) return path;
-      return null;
+      return LOGO_PATH;
     }
     function getTagLabel(tag) {
       const t = (tag || '').trim();
@@ -405,10 +414,8 @@
     function renderItemCard(item, category, container, isGrid) {
       const card = document.createElement('div');
       card.className = 'item-card';
-      const photoSrc = getItemPhoto(item);
-      const photoHtml = photoSrc
-        ? `<div class="card-photo"><img src="${photoSrc}" alt="" loading="lazy" /></div>`
-        : '<div class="card-photo no-photo">אין תמונה</div>';
+      const photoSrc = getItemPhoto(item, category);
+      const photoHtml = `<div class="card-photo"><img src="${photoSrc}" alt="" loading="lazy" /></div>`;
       const pricePill = buildPricePill(category, item);
       const name = (item.name || '').trim();
       card.innerHTML = photoHtml + `<div class="card-name">${name}</div><div class="card-price"><span class="price-pill">${pricePill}</span></div>`;
@@ -483,7 +490,7 @@
       const desc = (item.description || '').trim();
       const tags = parseTags(item.tags).map(getTagLabel).filter(Boolean);
       const priceText = buildPriceText(category, item);
-      const photoSrc = getItemPhoto(item);
+      const photoSrc = getItemPhoto(item, category);
 
       document.getElementById('modalName').textContent = name;
       document.getElementById('modalPrices').innerHTML = priceText ? `<span class="price-pill">${priceText}</span>` : '';
@@ -491,11 +498,7 @@
       document.getElementById('modalTags').innerHTML = tags.length ? tags.map(t => `<span>${t}</span> `).join('') : '';
 
       const photoEl = document.getElementById('modalPhoto');
-      if (photoSrc) {
-        photoEl.innerHTML = `<img src="${photoSrc}" alt="" class="modal-item-photo" />`;
-      } else {
-        photoEl.innerHTML = '<div class="modal-item-photo-placeholder">אין תמונה</div>';
-      }
+      photoEl.innerHTML = `<img src="${photoSrc}" alt="" class="modal-item-photo" />`;
 
       const modal = document.getElementById('item-modal');
       modal.classList.add('open');
