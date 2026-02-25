@@ -28,6 +28,7 @@
 
     /* ─── Header ─── */
     .menu-header {
+      position: relative;
       text-align: center;
       padding: 1rem 1rem 0.75rem;
       background: #FFFFFF;
@@ -38,6 +39,32 @@
       margin: 0 auto;
       height: 100px;
       width: auto;
+      object-fit: contain;
+    }
+    .header-icons {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .header-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #DE6629;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .header-icons a:hover { background: #C55A20; }
+    .header-icons img {
+      width: 22px;
+      height: 22px;
       object-fit: contain;
     }
 
@@ -305,6 +332,11 @@
 <body>
 
   <header class="menu-header">
+    <div class="header-icons" aria-label="רשתות חברתיות וניווט">
+      <a href="https://www.instagram.com/sammona_cafe/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="אינסטגרם"><img src="pics/instagram.png" alt="" /></a>
+      <a href="https://wa.me/972526944430" target="_blank" rel="noopener noreferrer" aria-label="וואטסאפ"><img src="pics/whatsapp.png" alt="" /></a>
+      <a href="https://waze.com/ul/hsvbfrvscp" target="_blank" rel="noopener noreferrer" aria-label="ווייז"><img src="pics/waze.png" alt="" /></a>
+    </div>
     <img class="logo" src="pics/logo.jpg" alt="סאמונה" />
   </header>
 
