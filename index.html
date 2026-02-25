@@ -512,9 +512,11 @@
       });
     }
 
+    let homeScrollY = 0;
     function showCategoryPage(categoryIndex) {
       const cat = menuData.categories[categoryIndex];
       if (!cat) return;
+      homeScrollY = window.scrollY || document.documentElement.scrollTop;
       document.getElementById('viewHome').classList.add('hidden');
       document.getElementById('viewCategory').classList.add('visible');
       document.getElementById('categoryPageTitle').textContent = cat;
@@ -526,6 +528,7 @@
     function hideCategoryPage() {
       document.getElementById('viewCategory').classList.remove('visible');
       document.getElementById('viewHome').classList.remove('hidden');
+      requestAnimationFrame(function() { window.scrollTo(0, homeScrollY); });
     }
 
     function openItemModal(item, category) {
