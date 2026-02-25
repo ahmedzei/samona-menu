@@ -51,23 +51,16 @@
       gap: 0.5rem;
     }
     .header-icons a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #DE6629;
-      color: #fff;
-      transition: background 0.2s;
+      display: block;
+      padding: 0.25rem;
+      transition: opacity 0.2s;
     }
-    .header-icons a:hover { background: #C55A20; }
+    .header-icons a:hover { opacity: 0.8; }
     .header-icons img {
-      width: 22px;
-      height: 22px;
+      display: block;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
-      /* Render logos as white so no white box shows; blends with orange circle */
-      filter: brightness(0) invert(1);
     }
 
     /* ─── Home view ─── */
