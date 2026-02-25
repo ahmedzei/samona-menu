@@ -391,8 +391,8 @@
       'עוף מתובל': 'pics/עוף.jpeg', 'חביתה': 'pics/חביתה.jpeg',
       'קינוח סאמונה': 'pics/קינוח סאמונה.jpeg',
       'קנאפה': 'pics/קנאפה חדש.jpeg', 'כנאפה': 'pics/קנאפה חדש.jpeg',
-      'אספרסו': 'pics/אספרסו.jpg', 'אמריקאנו חם': 'pics/אמריקאנו חם.png', 'קורטדו': 'pics/קורטדו.png', 'הפוך': 'pics/הפוך.jpeg',
-      'שוקו חם': 'pics/שוקו חם.png', 'קפה ערבי': 'pics/קפה ערבי.png', 'אמריקאנו קר': 'pics/אמריקאנו קר.png',
+      'אספרסו': 'pics/אספרסו.jpg', 'קורטדו': 'pics/קורטדו.png', 'הפוך': 'pics/הפוך.jpeg',
+      'אמריקאנו קר': 'pics/אמריקאנו קר.png',
       'לימונדה': 'pics/לימונדה.png', 'קפה קר': 'pics/קפה קר.png', 'משקאות מוגזים': 'pics/משקאות מוגזים.png',
       'סחוט טרי': 'pics/סחוט טרי תפוזים.png', 'תפוזים': 'pics/סחוט טרי תפוזים.png',
       "צ'יפס": "pics/ציפס.png",
@@ -426,8 +426,8 @@
       const fromSheetLarge = (item.size_large || item.price_large_label || '').trim();
       if (fromSheet || fromSheetLarge) return { small: fromSheet || 'אישי', large: fromSheetLarge || 'משפחתית' };
       const cat = (category || '').trim();
-      if (cat === 'בוקר') return { small: 'אישי', large: 'זוגי' };
-      if (cat === 'פיצות') return { small: 'רגילה', large: 'ענקית' };
+      if (cat === 'בוקר') return { small: 'יחיד', large: 'זוגי' };
+      if (cat === 'פיצות' || cat === 'מנקיש') return { small: 'רגילה', large: 'ענקית' };
       if (cat === 'שתייה חמה' || cat === 'שתייה קרה') return { small: 'רגיל', large: 'גדול' };
       return { small: 'אישי', large: 'משפחתית' };
     }
